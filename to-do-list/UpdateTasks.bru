@@ -1,0 +1,19 @@
+meta {
+  name: UpdateTasks
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3333/tasks/3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title":"Teste de udate",
+    "description": "alterando tasks",
+    "status":"Pendente"
+  }
+}

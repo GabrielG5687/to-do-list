@@ -1,0 +1,18 @@
+meta {
+  name: crindo dados
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3333/tasks
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title":"Testando Bruno",
+    "description": "Verificanor se acriação de dados esta funcionando"
+  }
+}
