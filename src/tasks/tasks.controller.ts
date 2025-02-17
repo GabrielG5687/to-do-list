@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpException, HttpStatus, NotFoundException, Param, Post, Put } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { NotFoundError } from 'rxjs';
+import { STATUS_CODES } from 'http';
 
 @Controller('/tasks')
 export class TasksController {
@@ -22,14 +24,34 @@ export class TasksController {
 
     //altra tasks
     @Put(':id')
-    async update(@Param('id') id:string, @Body() body: Partial<{title: string; description?: string; status:string }>): 
+    async update(@Param('id') id:string, @Body() body: Partial<{title: string; description?: string; status:boolean }>): 
     Promise <Task>{
-        return this.tasksService.alterar(Number(id), body)
+        try {
+            const taskUdate= await this.tasksService.alterar(Number(id), body)
+            return taskUdate
+        }catch(error){
+            console.error(error)
+            throw new HttpException(
+                {message: 'Essta tarefa não foi encontrada!'},
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }
     }
 
     //deleta tasks
     @Delete(':id')
     async remove(@Param('id') id: string): Promise<Task>{
-        return this.tasksService.deletando(Number(id))
+
+        try {
+            const taskRemoved = await this.tasksService.deletando(Number(id))
+            return taskRemoved
+        }
+        catch(error){
+            console.error(error)
+            throw new HttpException(
+                {message: 'Essta tarefa não foi encontrada!'},
+                HttpStatus.INTERNAL_SERVER_ERROR
+            )
+        }        
     }
 }

@@ -26,7 +26,7 @@ export class TasksService {
     });
   }
 
-  async alterar(id:number, data: Partial<{title: string; description?: string; status:string }>): Promise<Task>{
+  async alterar(id:number, data: Partial<{title: string; description?: string; status:boolean }>): Promise<Task>{
     return this.prisma.task.update({
       where: {id},
       data,
